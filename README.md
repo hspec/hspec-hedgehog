@@ -1,5 +1,7 @@
 # hspec-hedgehog
 
+[![Build Status](https://travis-ci.org/parsonsmatt/hspec-hedgehog.svg?branch=master)](https://travis-ci.org/parsonsmatt/hspec-hedgehog)
+
 An integration library for [hspec](https://hackage.haskell.org/package/hspec) and [hedgehog](https://hackage.haskell.org/package/hedgehog).
 
 Example:
