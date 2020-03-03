@@ -2,9 +2,11 @@ import           Control.Concurrent     (threadDelay)
 import           Control.Monad.IO.Class (liftIO)
 import qualified Hedgehog.Gen           as Gen
 import qualified Hedgehog.Range         as Range
-import           Test.Hspec             (before, describe, hspec, it, shouldBe)
+import           Test.Hspec             (before, beforeAll, describe, hspec, it, shouldBe)
 import           Test.Hspec.Hedgehog    (PropertyT, diff, forAll, hedgehog,
                                          (/==), (===))
+import Data.IORef
+import Test.Hspec.QuickCheck (modifyMaxSuccess)
 
 main :: IO ()
 main = hspec $ do
@@ -20,7 +22,7 @@ main = hspec $ do
         it "lets you use PropertyT directly" $ hedgehog $ do
             x <- forAll $ Gen.integral (Range.linear 0 1000)
             y <- forAll $ Gen.integral (Range.linear 0 5000)
-            diff (x + y) (>=) x
+            diff (x + y) (>=) (x :: Integer)
 
         it "renders a progress bit" $ hedgehog $ do
             x <- forAll $ Gen.integral (Range.linear 0 1000)
@@ -39,3 +41,13 @@ main = hspec $ do
             it "generates" $ \str -> hedgehog $ do
                 wrongLen <- forAll $ Gen.integral (Range.linear 0 3)
                 length str /== wrongLen
+
+    describe "modifyMaxSuccess" $ do
+        modifyMaxSuccess (\_ -> 10) $ do
+            beforeAll (newIORef (0 :: Integer)) $ do
+                it "counts to 10" $ \ref -> hedgehog $ do
+                    liftIO $ atomicModifyIORef' ref (\a -> (a + 1, ()))
+                    True === True
+                it "works" $ \ref -> do
+                    val <- readIORef ref
+                    val `shouldBe` 10
