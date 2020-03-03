@@ -2,6 +2,8 @@ cabal-version: 1.12
 name:           hspec-hedgehog
 version:        0.0.0.0
 description:    Please see the README on GitHub at <https://github.com/parsonsmatt/hspec-hedgehog#readme>
+synopsis:       Integrate Hedgehog and Hspec!
+category:       Testing
 homepage:       https://github.com/parsonsmatt/hspec-hedgehog#readme
 bug-reports:    https://github.com/parsonsmatt/hspec-hedgehog/issues
 author:         Matt Parsons
@@ -24,13 +26,13 @@ library
   hs-source-dirs:
       src
   build-depends:
-      base      >=4.7 && <5
-    , hspec
-    , hspec-core
-    , hedgehog
-    , HUnit
-    , QuickCheck
-    , splitmix
+      base          >= 4.7   && < 5
+    , hspec         >= 2.4.4 && < 3
+    , hspec-core    >= 2.4.4 && < 3
+    , hedgehog      >= 1.0   && < 2
+    , HUnit         >= 1.5   && < 2
+    , QuickCheck    >= 2.9.2 && < 3
+    , splitmix      >= 0.0.1 && < 1
   default-language: Haskell2010
 
 test-suite hspec-hedgehog-test
