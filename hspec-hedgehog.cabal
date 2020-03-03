@@ -24,13 +24,13 @@ library
   hs-source-dirs:
       src
   build-depends:
-      base      >=4.7 && <5
-    , hspec
-    , hspec-core
-    , hedgehog
-    , HUnit
-    , QuickCheck
-    , splitmix
+      base          >= 4.7   && < 5
+    , hspec         >= 2.4.4 && < 3
+    , hspec-core    >= 2.4.4 && < 3
+    , hedgehog      >= 1.0
+    , HUnit         >= 1.5   && < 2
+    , QuickCheck    >= 2.9.2 && < 3
+    , splitmix      >= 0.0.1 && < 1
   default-language: Haskell2010
 
 test-suite hspec-hedgehog-test
