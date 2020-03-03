@@ -1,10 +1,10 @@
-import Test.Hspec
-import Test.Hspec.Hedgehog
-import Test.Hspec.QuickCheck (prop)
-import qualified Hedgehog.Gen as Gen
-import qualified Hedgehog.Range as Range
-import Control.Concurrent
-import Control.Monad.IO.Class
+import           Control.Concurrent     (threadDelay)
+import           Control.Monad.IO.Class (liftIO)
+import qualified Hedgehog.Gen           as Gen
+import qualified Hedgehog.Range         as Range
+import           Test.Hspec             (before, describe, hspec, it, shouldBe)
+import           Test.Hspec.Hedgehog    (PropertyT, diff, forAll, hedgehog,
+                                         (/==), (===))
 
 main :: IO ()
 main = hspec $ do
