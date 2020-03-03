@@ -9,6 +9,8 @@
 {-# LANGUAGE TypeSynonymInstances  #-}
 {-# LANGUAGE ViewPatterns          #-}
 
+{-# OPTIONS_GHC -fno-warn-orphans #-}
+
 -- | This module allows you to easily integrate the "Hedgehog" library with
 -- "Test.Hspec" test-suites.
 --
@@ -77,7 +79,15 @@
 --
 -- You don't have to remember to put the 'hedgehog' call after the lambda.
 module Test.Hspec.Hedgehog
-    ( hedgehog
+    ( -- * The Main Function
+      hedgehog
+      -- * Hspec re-exports
+    , modifyArgs
+    , modifyMaxSuccess
+    , modifyMaxDiscardRatio
+    , modifyMaxSize
+    , modifyMaxShrinks
+      -- * Hedgehog Re-exports
     , module Hedgehog
     ) where
 
@@ -85,22 +95,24 @@ import           Control.Monad.IO.Class     (liftIO)
 import           Data.Coerce                (coerce)
 import           Data.IORef                 (newIORef, readIORef, writeIORef)
 import           Hedgehog
-import           Hedgehog.Internal.Config   (UseColor, detectColor)
-import           Hedgehog.Internal.Property (TerminationCriteria (..),
-                                             TestCount (..), TestLimit (..),
-                                             propertyConfig,
-                                             propertyTerminationCriteria,
-                                             propertyTest)
+import           Hedgehog.Internal.Config   (detectColor)
+import           Hedgehog.Internal.Property (DiscardLimit (..), Property (..),
+                                             PropertyConfig (..),
+                                             ShrinkLimit (..),
+                                             TerminationCriteria (..),
+                                             TestCount (..), TestLimit (..))
 import           Hedgehog.Internal.Report   as Hedge
 import           Hedgehog.Internal.Runner   (checkReport)
 import qualified Hedgehog.Internal.Seed     as Seed
-import           Hedgehog.Internal.Source   (HasCallStack)
 import           System.Random.SplitMix     (unseedSMGen)
 import           Test.Hspec
 import           Test.Hspec.Core.Spec       as Hspec
+import           Test.Hspec.QuickCheck      (modifyArgs, modifyMaxDiscardRatio,
+                                             modifyMaxShrinks, modifyMaxSize,
+                                             modifyMaxSuccess)
 import           Test.HUnit.Base            (assertFailure)
 import           Test.QuickCheck.Random     (QCGen (..))
-import           Test.QuickCheck.Test       (replay)
+import           Test.QuickCheck.Test       (Args (..))
 
 -- | Embed a "Hedgehog" @'PropertyT' 'IO' ()@ in an @hspec@ test.
 --
@@ -150,15 +162,29 @@ instance Example (a -> PropertyT IO ()) where
             color <- detectColor
             let size = 0
                 prop = aprop a
-                propConfig = propertyConfig prop
-                maxTests = case propertyTerminationCriteria propConfig of
-                    EarlyTermination _ (TestLimit n)      -> n
-                    NoEarlyTermination _ (TestLimit n)    -> n
-                    NoConfidenceTermination (TestLimit n) -> n
-                testCount report = case reportTests report of
-                    TestCount n -> n
+                propConfig = useQuickCheckArgs (propertyConfig prop)
+                qcArgs = paramsQuickCheckArgs params
+
+                maxTests = maxSuccess qcArgs
+                useQuickCheckArgs pc =
+                    pc
+                    { propertyTerminationCriteria =
+                        case propertyTerminationCriteria pc of
+                            EarlyTermination x (TestLimit _)      ->
+                                EarlyTermination x (TestLimit maxTests)
+                            NoEarlyTermination x (TestLimit _)    ->
+                                NoEarlyTermination x (TestLimit maxTests)
+                            NoConfidenceTermination (TestLimit _) ->
+                                NoConfidenceTermination (TestLimit maxTests)
+                    , propertyDiscardLimit =
+                        DiscardLimit $ maxDiscardRatio qcArgs
+                    , propertyShrinkLimit =
+                        ShrinkLimit $ maxShrinks qcArgs
+                    }
+                testCount report =
+                    case reportTests report of
+                        TestCount n -> n
                 cb progress = do
-                    ppprogress <- renderProgress color Nothing progress
                     case reportStatus progress of
                         Running ->
                             progressCallback (testCount progress, maxTests)
@@ -187,5 +213,3 @@ instance Example (a -> PropertyT IO ()) where
               OK ->
                   pure $ Result "" Success
         readIORef ref
-      where
-        mkFail = Result
