@@ -69,7 +69,7 @@
 --
 -- @
 -- 'before' ('pure' \"Hello!\") $ do
---   'it' \"message\" $ \str -> do
+--   'it' \"message\" $ \\str -> do
 --     'pure' () :: 'PropertyT' 'IO' ()
 --     wrongLen <- 'forAll' $ 'Gen.integral' ('Range.linear' 0 3)
 --     'length' str '/==' wrongLen
