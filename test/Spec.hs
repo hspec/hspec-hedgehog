@@ -1,12 +1,12 @@
 import           Control.Concurrent     (threadDelay)
 import           Control.Monad.IO.Class (liftIO)
+import           Data.IORef             (atomicModifyIORef', readIORef, newIORef)
 import qualified Hedgehog.Gen           as Gen
 import qualified Hedgehog.Range         as Range
 import           Test.Hspec             (before, beforeAll, describe, hspec, it, shouldBe)
 import           Test.Hspec.Hedgehog    (PropertyT, diff, forAll, hedgehog,
                                          (/==), (===))
-import Data.IORef
-import Test.Hspec.QuickCheck (modifyMaxSuccess)
+import           Test.Hspec.QuickCheck  (modifyMaxSuccess)
 
 main :: IO ()
 main = hspec $ do
