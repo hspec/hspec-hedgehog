@@ -104,6 +104,8 @@ import           Hedgehog.Internal.Property (DiscardLimit (..), Property (..),
 import           Hedgehog.Internal.Report   as Hedge
 import           Hedgehog.Internal.Runner   (checkReport)
 import qualified Hedgehog.Internal.Seed     as Seed
+import           Hedgehog.Internal.Source   (ColumnNo (..), LineNo (..),
+                                             Span (..))
 import           System.Random.SplitMix     (unseedSMGen)
 import           Test.Hspec
 import           Test.Hspec.Core.Spec       as Hspec
@@ -196,20 +198,19 @@ instance Example (a -> PropertyT IO ()) where
                Just (rng, _) -> pure (uncurry Seed (unseedSMGen (coerce rng)))
             hedgeResult <- checkReport propConfig size seed (propertyTest prop) cb
             ppresult <- renderResult color Nothing hedgeResult
-            writeIORef ref =<< case reportStatus hedgeResult of
-              Failed FailureReport{..} -> do
-    --              let fromSpan Span{..} =
-    --                    Location
-    --                        { locationFile = spanFile
-    --                        , locationLine = coerce spanStartLine
-    --                        , locationColumn = coerce spanStartColumn
-    --                        }
-    --              pure
-    --                $ Result ""
-    --                $ Hspec.Failure (fromSpan <$> failureLocation) _h -- ppresult
-                  assertFailure ppresult
-              GaveUp ->
-                  assertFailure ppresult
-              OK ->
-                  pure $ Result "" Success
+            writeIORef ref $ Result "" $ case reportStatus hedgeResult of
+                Failed FailureReport{..} ->
+                    let
+                        fromSpan Span{..} =
+                            Location
+                                { locationFile = spanFile
+                                , locationLine = coerce spanStartLine
+                                , locationColumn = coerce spanStartColumn
+                                }
+                    in
+                        Hspec.Failure (fromSpan <$> failureLocation) $ Reason ppresult
+                GaveUp ->
+                    Failure Nothing (Reason "GaveUp")
+                OK ->
+                    Success
         readIORef ref
