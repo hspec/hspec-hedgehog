@@ -27,8 +27,8 @@ library
       src
   build-depends:
       base          >= 4.7   && < 5
-    , hspec         >= 2.4.4 && < 3
-    , hspec-core    >= 2.4.4 && < 3
+    , hspec         >= 2.5.8 && < 3
+    , hspec-core    >= 2.5.8 && < 3
     , hedgehog      >= 1.0.2 && < 2
     , HUnit         >= 1.5   && < 2
     , QuickCheck    >= 2.9.2 && < 3
