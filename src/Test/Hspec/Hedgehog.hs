@@ -142,8 +142,8 @@ hedgehog = id
 -- of 'Example' for a function for more details.
 --
 -- @since 0.0.0.0
-instance Example (PropertyT IO ()) where
-    type Arg (PropertyT IO ()) = ()
+instance m ~ IO => Example (PropertyT m ()) where
+    type Arg (PropertyT m ()) = ()
     evaluateExample e = evaluateExample (\() -> e)
 
 -- | Warning: orphan instance! This instance is used to embed a "Hedgehog"
