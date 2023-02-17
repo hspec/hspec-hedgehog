@@ -155,8 +155,8 @@ instance Example (PropertyT IO ()) where
 -- Hedgehog tests.
 --
 -- @since 0.0.0.0
-instance Example (a -> PropertyT IO ()) where
-    type Arg (a -> PropertyT IO ()) = a
+instance (m ~ IO) => Example (a -> PropertyT m ()) where
+    type Arg (a -> PropertyT m ()) = a
 
     evaluateExample (fmap property -> aprop) params aroundAction progressCallback = do
         ref <- newIORef (Result "" (Pending Nothing Nothing))
