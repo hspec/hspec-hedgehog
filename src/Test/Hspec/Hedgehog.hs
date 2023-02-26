@@ -95,7 +95,7 @@ import           Control.Monad.IO.Class     (liftIO)
 import           Data.Coerce                (coerce)
 import           Data.IORef                 (newIORef, readIORef, writeIORef)
 import           Hedgehog
-import           Hedgehog.Internal.Config   (detectColor)
+import           Hedgehog.Internal.Config   (UseColor(..))
 import           Hedgehog.Internal.Property (DiscardLimit (..), Property (..),
                                              PropertyConfig (..),
                                              ShrinkLimit (..),
@@ -112,7 +112,6 @@ import           Test.Hspec.Core.Spec       as Hspec
 import           Test.Hspec.QuickCheck      (modifyArgs, modifyMaxDiscardRatio,
                                              modifyMaxShrinks, modifyMaxSize,
                                              modifyMaxSuccess)
-import           Test.HUnit.Base            (assertFailure)
 import           Test.QuickCheck.Random     (QCGen (..))
 import           Test.QuickCheck.Test       (Args (..))
 
@@ -161,7 +160,6 @@ instance Example (a -> PropertyT IO ()) where
     evaluateExample (fmap property -> aprop) params aroundAction progressCallback = do
         ref <- newIORef (Result "" (Pending Nothing Nothing))
         aroundAction $ \a ->  do
-            color <- detectColor
             let size = 0
                 prop = aprop a
                 propConfig = useQuickCheckArgs (propertyConfig prop)
@@ -197,7 +195,7 @@ instance Example (a -> PropertyT IO ()) where
                Nothing       -> Seed.random
                Just (rng, _) -> pure (uncurry Seed (unseedSMGen (coerce rng)))
             hedgeResult <- checkReport propConfig size seed (propertyTest prop) cb
-            ppresult <- renderResult color Nothing hedgeResult
+            ppresult <- renderResult EnableColor Nothing hedgeResult
             writeIORef ref $ Result "" $ case reportStatus hedgeResult of
                 Failed FailureReport{..} ->
                     let
@@ -208,7 +206,7 @@ instance Example (a -> PropertyT IO ()) where
                                 , locationColumn = coerce spanStartColumn
                                 }
                     in
-                        Hspec.Failure (fromSpan <$> failureLocation) $ Reason ppresult
+                        Hspec.Failure (fromSpan <$> failureLocation) $ ColorizedReason ppresult
                 GaveUp ->
                     Failure Nothing (Reason "GaveUp")
                 OK ->
