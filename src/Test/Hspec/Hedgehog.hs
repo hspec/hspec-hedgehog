@@ -142,8 +142,8 @@ hedgehog = id
 -- of 'Example' for a function for more details.
 --
 -- @since 0.0.0.0
-instance Example (PropertyT IO ()) where
-    type Arg (PropertyT IO ()) = ()
+instance m ~ IO => Example (PropertyT m ()) where
+    type Arg (PropertyT m ()) = ()
     evaluateExample e = evaluateExample (\() -> e)
 
 propertyWithoutCallStack :: PropertyT IO () -> Property
@@ -158,8 +158,8 @@ propertyWithoutCallStack = withFrozenCallStack property
 -- Hedgehog tests.
 --
 -- @since 0.0.0.0
-instance Example (a -> PropertyT IO ()) where
-    type Arg (a -> PropertyT IO ()) = a
+instance (m ~ IO) => Example (a -> PropertyT m ()) where
+    type Arg (a -> PropertyT m ()) = a
 
     evaluateExample (fmap propertyWithoutCallStack -> aprop) params aroundAction progressCallback = do
         ref <- newIORef (Result "" (Pending Nothing Nothing))

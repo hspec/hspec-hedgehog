@@ -23,6 +23,11 @@ main = hspec $ do
             x <- forAll $ Gen.integral (Range.linear 0 1000)
             y <- forAll $ Gen.integral (Range.linear 0 5000)
             diff (x + y) (>=) (x :: Integer)
+            
+        it "lets you use PropertyT directly without forcing the type" $ do
+            x <- forAll $ Gen.integral (Range.linear 0 1000)
+            y <- forAll $ Gen.integral (Range.linear 0 5000)
+            diff (x + y) (>=) (x :: Integer)
 
         it "renders a progress bit" $ hedgehog $ do
             x <- forAll $ Gen.integral (Range.linear 0 1000)
