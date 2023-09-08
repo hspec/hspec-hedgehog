@@ -1,5 +1,16 @@
 # Changelog for hspec-hedgehog
 
+## 0.1.0.0
+
+- [#25](https://github.com/parsonsmatt/hspec-hedgehog/pull/25) @sol
+    - Suppress internal source locations.
+- [#24](https://github.com/parsonsmatt/hspec-hedgehog/pull/24) @sol
+    - Regard `--color` / `--no-color`.
+- [#23](https://github.com/parsonsmatt/hspec-hedgehog/pull/23) @ocharles
+    - Improve type inference by constraining the base monad of `PropertyT` to
+      `IO`.  This makes explicitly using `hedgehog` redundant in many
+      situations.
+
 ## 0.0.1.2
 
 - [#7](https://github.com/parsonsmatt/hspec-hedgehog/pull/7) @parsonsmatt
