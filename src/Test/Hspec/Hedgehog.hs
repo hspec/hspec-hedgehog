@@ -94,6 +94,7 @@ module Test.Hspec.Hedgehog
 import           Control.Monad.IO.Class     (liftIO)
 import           Data.Coerce                (coerce)
 import           Data.IORef                 (newIORef, readIORef, writeIORef)
+import           GHC.Stack                  (withFrozenCallStack)
 import           Hedgehog
 import           Hedgehog.Internal.Config   (detectColor)
 import           Hedgehog.Internal.Property (DiscardLimit (..), Property (..),
@@ -112,7 +113,6 @@ import           Test.Hspec.Core.Spec       as Hspec
 import           Test.Hspec.QuickCheck      (modifyArgs, modifyMaxDiscardRatio,
                                              modifyMaxShrinks, modifyMaxSize,
                                              modifyMaxSuccess)
-import           Test.HUnit.Base            (assertFailure)
 import           Test.QuickCheck.Random     (QCGen (..))
 import           Test.QuickCheck.Test       (Args (..))
 
@@ -146,6 +146,9 @@ instance Example (PropertyT IO ()) where
     type Arg (PropertyT IO ()) = ()
     evaluateExample e = evaluateExample (\() -> e)
 
+propertyWithoutCallStack :: PropertyT IO () -> Property
+propertyWithoutCallStack = withFrozenCallStack property
+
 -- | Warning: orphan instance! This instance is used to embed a "Hedgehog"
 -- property seamlessly into the @hspec@ framework.
 --
@@ -158,7 +161,7 @@ instance Example (PropertyT IO ()) where
 instance Example (a -> PropertyT IO ()) where
     type Arg (a -> PropertyT IO ()) = a
 
-    evaluateExample (fmap property -> aprop) params aroundAction progressCallback = do
+    evaluateExample (fmap propertyWithoutCallStack -> aprop) params aroundAction progressCallback = do
         ref <- newIORef (Result "" (Pending Nothing Nothing))
         aroundAction $ \a ->  do
             color <- detectColor
