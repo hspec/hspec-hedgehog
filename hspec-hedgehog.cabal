@@ -5,7 +5,7 @@ cabal-version: 1.12
 -- see: https://github.com/sol/hpack
 
 name:           hspec-hedgehog
-version:        0.1.1.0
+version:        0.2.0.0
 description:    Please see the README on GitHub at <https://github.com/hspec/hspec-hedgehog#readme>
 synopsis:       Integrate Hedgehog and Hspec!
 category:       Testing
@@ -33,7 +33,7 @@ library
   build-depends:
       QuickCheck >=2.9.2 && <3
     , base >=4.7 && <5
-    , hedgehog >=1.0.2 && <2
+    , hedgehog >=1.5
     , hspec >=2.11.0 && <3
     , hspec-core >=2.11.0 && <3
     , splitmix >=0.0.1 && <1
@@ -54,7 +54,7 @@ test-suite spec
       HUnit
     , QuickCheck
     , base >=4.7 && <5
-    , hedgehog >=1.0.2 && <2
+    , hedgehog >=1.5
     , hspec >=2.11.0 && <3
     , hspec-core >=2.11.0 && <3
     , hspec-hedgehog

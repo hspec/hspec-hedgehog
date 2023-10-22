@@ -56,35 +56,31 @@ spec = do
     context "on Success" $ do
       it "includes the number of passed tests" $ do
         eval success `shouldReturn` Result
-            "  ✓ property passed 100 tests."
+            "passed 100 tests.\n"
             Success
 
       it "includes classification" $ do
         eval (label "foo" >> success) `shouldReturn` Result (joinLines [
-            "  ✓ property passed 100 tests."
-          , "    foo 100% ████████████████████"
+            "passed 100 tests."
+          , "foo 100% ████████████████████\n"
           ]) Success
 
     context "on Failure" $ do
       it "includes the number of discarded tests" $ do
         eval discard `shouldReturn` Result "" (Failure Nothing (Reason
-            "  ⚐ property gave up after 10 discards, passed 0 tests."
+            "gave up after 10 discards, passed 0 tests.\n"
           ))
 
       it "provides a detailed failure message" $ do
         Result "" (Failure (Just _loc) (ColorizedReason reason)) <- eval failingProperty
-        let line delta = "    " <> show (failingPropertyLine + delta)
+        let line delta = "" <> show (failingPropertyLine + delta)
         stripAnsi reason `shouldBe` joinLines [
-            "  ✗ property failed at test/Test/Hspec/HedgehogSpec.hs:" <> show failingPropertyLine <> ":19"
-          , "    after 1 test."
-          , "    shrink path: 1:"
-          , "  "
-          ,      "       ┏━━ test/Test/Hspec/HedgehogSpec.hs ━━━"
+            "failed after 1 test."
+          , "shrink path: 1:"
+          , ""
+          ,          "   ┏━━ test/Test/Hspec/HedgehogSpec.hs ━━━"
           , line -1 <> " ┃ failingProperty :: PropertyT IO ()"
           , line  0 <> " ┃ failingProperty = failure"
-          ,      "       ┃ ^^^^^^^^^^^^^^^^^^^^^^^^^"
-          , "  "
-          , "    This failure can be reproduced by running:"
-          , "    > recheckAt (Seed 14375056955115587481 16778118630780010967) \"1:\" property"
-          , "  "
+          ,          "   ┃ ^^^^^^^^^^^^^^^^^^^^^^^^^"
+          , ""
           ]

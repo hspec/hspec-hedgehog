@@ -94,6 +94,7 @@ module Test.Hspec.Hedgehog
     ) where
 
 import           Control.Monad.IO.Class     (liftIO)
+import           Data.Char                  (isSpace)
 import           Data.Coerce                (coerce)
 import           Data.IORef                 (newIORef, readIORef, writeIORef)
 import           GHC.Stack                  (withFrozenCallStack)
@@ -105,7 +106,6 @@ import           Hedgehog.Internal.Property (DiscardLimit (..), Property (..),
                                              TerminationCriteria (..),
                                              TestCount (..), TestLimit (..))
 import           Hedgehog.Internal.Report   hiding (renderResult)
-import qualified Hedgehog.Internal.Report   as Hedge
 import           Hedgehog.Internal.Runner   (checkReport)
 import qualified Hedgehog.Internal.Seed     as Seed
 import           Hedgehog.Internal.Source   (ColumnNo (..), LineNo (..),
@@ -203,7 +203,14 @@ instance (m ~ IO) => Example (a -> PropertyT m ()) where
                Just (rng, _) -> pure (uncurry Seed (unseedSMGen (coerce rng)))
             hedgeResult <- checkReport propConfig size seed (propertyTest prop) cb
 
-            let renderResult color = Hedge.renderResult color (Just "property") hedgeResult
+            let
+              config = defaultConfig {
+                  configContext = Context 3
+                , configPrintFailedAtLocation = False
+                , configPrintReproduceMessage = False
+                , configPrintPrefixIcons = DisablePrefixIcons
+                }
+              renderResult color = unlines . unindent . lines . dropWhileEnd isSpace <$> renderResultWith config color (Just "") hedgeResult
 
             case reportStatus hedgeResult of
                 Failed FailureReport{..} -> do
@@ -223,3 +230,11 @@ instance (m ~ IO) => Example (a -> PropertyT m ()) where
                     ppresult <- renderResult DisableColor
                     writeIORef ref $ Result ppresult Success
         readIORef ref
+
+dropWhileEnd :: (a -> Bool) -> [a] -> [a]
+dropWhileEnd p = reverse . dropWhile p . reverse
+
+unindent :: [String] -> [String]
+unindent xs = map (drop indentation) xs
+  where
+    indentation = minimum $ map (length . takeWhile (== ' ')) xs
