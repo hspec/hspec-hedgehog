@@ -1,5 +1,10 @@
 # Changelog for hspec-hedgehog
 
+## 0.1.1.0
+- [#30](https://github.com/parsonsmatt/hspec-hedgehog/pull/30) @sol
+    - Show classification on success
+    - Provide more information on "gave up"
+
 ## 0.1.0.0
 
 - [#25](https://github.com/parsonsmatt/hspec-hedgehog/pull/25) @sol

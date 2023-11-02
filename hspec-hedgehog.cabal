@@ -1,6 +1,6 @@
 cabal-version: 1.12
 name:           hspec-hedgehog
-version:        0.1.0.0
+version:        0.1.1.0
 description:    Please see the README on GitHub at <https://github.com/parsonsmatt/hspec-hedgehog#readme>
 synopsis:       Integrate Hedgehog and Hspec!
 category:       Testing
