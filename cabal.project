@@ -1,0 +1,7 @@
+packages:
+  hspec-hedgehog.cabal
+
+package hspec-hedgehog
+  ghc-options: -Werror
+
+tests: True
