@@ -3,7 +3,7 @@ spec-version: 0.36.0
 name: hspec-hedgehog
 version: 0.1.1.0
 synopsis: Integrate Hedgehog and Hspec!
-description: Please see the README on GitHub at <https://github.com/parsonsmatt/hspec-hedgehog#readme>
+description: Please see the README on GitHub at <https://github.com/hspec/hspec-hedgehog#readme>
 category: Testing
 author: Matt Parsons
 maintainer: parsonsmatt@gmail.com
@@ -13,7 +13,7 @@ extra-source-files:
   - README.md
   - ChangeLog.md
 
-github: parsonsmatt/hspec-hedgehog
+github: hspec/hspec-hedgehog
 
 dependencies:
   - base >= 4.7 && < 5
@@ -28,7 +28,7 @@ library:
     - splitmix >= 0.0.1 && < 1
 
 tests:
-  hspec-hedgehog-test:
+  spec:
     main: Spec.hs
     source-dirs: test
     build-tools: hspec-discover

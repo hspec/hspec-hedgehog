@@ -6,11 +6,11 @@ cabal-version: 1.12
 
 name:           hspec-hedgehog
 version:        0.1.1.0
-description:    Please see the README on GitHub at <https://github.com/parsonsmatt/hspec-hedgehog#readme>
+description:    Please see the README on GitHub at <https://github.com/hspec/hspec-hedgehog#readme>
 synopsis:       Integrate Hedgehog and Hspec!
 category:       Testing
-homepage:       https://github.com/parsonsmatt/hspec-hedgehog#readme
-bug-reports:    https://github.com/parsonsmatt/hspec-hedgehog/issues
+homepage:       https://github.com/hspec/hspec-hedgehog#readme
+bug-reports:    https://github.com/hspec/hspec-hedgehog/issues
 author:         Matt Parsons
 maintainer:     parsonsmatt@gmail.com
 copyright:      2020 Matt Parsons
@@ -23,7 +23,7 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/parsonsmatt/hspec-hedgehog
+  location: https://github.com/hspec/hspec-hedgehog
 
 library
   exposed-modules:
@@ -39,7 +39,7 @@ library
     , splitmix >=0.0.1 && <1
   default-language: Haskell2010
 
-test-suite hspec-hedgehog-test
+test-suite spec
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
