@@ -5,3 +5,9 @@ package hspec-hedgehog
   ghc-options: -Werror
 
 tests: True
+
+source-repository-package
+  type: git
+  location: https://github.com/hedgehogqa/haskell-hedgehog
+  tag: fd182bf670abe554a7bebd34a0cac42e7bb07846
+  subdir: hedgehog
