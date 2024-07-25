@@ -1,12 +1,15 @@
 name: build
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
 
-permissions:
-  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: 0 0 * * *
 
 jobs:
   build:
@@ -75,3 +78,16 @@ jobs:
 
       - name: Build documentation
         run: cabal haddock all
+
+  success:
+    needs: build
+    runs-on: ubuntu-latest
+    if: always() # this is required as GitHub considers "skipped" jobs as "passed" when checking branch protection rules
+
+    steps:
+      - run: false
+        if: needs.build.result != 'success'
+
+      - uses: actions/checkout@v3
+      - name: Check for trailing whitespace
+        run: '! git grep -I "\s\+$"'
