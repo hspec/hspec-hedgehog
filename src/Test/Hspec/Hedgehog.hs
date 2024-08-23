@@ -184,7 +184,7 @@ instance (m ~ IO) => Example (a -> PropertyT m ()) where
                             NoConfidenceTermination (TestLimit _) ->
                                 NoConfidenceTermination (TestLimit maxTests)
                     , propertyDiscardLimit =
-                        DiscardLimit $ maxDiscardRatio qcArgs
+                        DiscardLimit $ maxDiscardRatio qcArgs * maxTests
                     , propertyShrinkLimit =
                         ShrinkLimit $ maxShrinks qcArgs
                     }

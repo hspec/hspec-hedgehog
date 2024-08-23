@@ -68,7 +68,7 @@ spec = do
     context "on Failure" $ do
       it "includes the number of discarded tests" $ do
         eval discard `shouldReturn` Result "" (Failure Nothing (Reason
-            "gave up after 10 discards, passed 0 tests.\n"
+            "gave up after 1000 discards, passed 0 tests.\n"
           ))
 
       it "provides a detailed failure message" $ do
