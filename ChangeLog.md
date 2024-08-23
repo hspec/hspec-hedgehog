@@ -4,6 +4,8 @@
 
 - [#45](https://github.com/hspec/hspec-hedgehog/pull/45) @ChickenProp
     - Set `propertyDiscardLimit` correctly.
+- [#44](https://github.com/hspec/hspec-hedgehog/pull/44) @ChickenProp
+    - Don't re-export `modifyMaxSize`, which is a no-op.
 
 ## 0.2.0.0
  - [#29](https://github.com/parsonsmatt/hspec-hedgehog/pull/29) @sol

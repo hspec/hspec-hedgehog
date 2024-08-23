@@ -84,10 +84,12 @@ module Test.Hspec.Hedgehog
     ( -- * The Main Function
       hedgehog
       -- * Hspec re-exports
+      --
+      -- | 'Test.Hspec.QuickCheck.modifyMaxSize' isn't re-exported, since
+      -- hedgehog has nothing that corresponds to it.
     , modifyArgs
     , modifyMaxSuccess
     , modifyMaxDiscardRatio
-    , modifyMaxSize
     , modifyMaxShrinks
       -- * Hedgehog Re-exports
     , module Hedgehog
@@ -114,8 +116,7 @@ import           System.Random.SplitMix     (unseedSMGen)
 import           Test.Hspec
 import           Test.Hspec.Core.Spec       as Hspec
 import           Test.Hspec.QuickCheck      (modifyArgs, modifyMaxDiscardRatio,
-                                             modifyMaxShrinks, modifyMaxSize,
-                                             modifyMaxSuccess)
+                                             modifyMaxShrinks, modifyMaxSuccess)
 import           Test.QuickCheck.Random     (QCGen (..))
 import           Test.QuickCheck.Test       (Args (..))
 
